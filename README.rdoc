@@ -10,11 +10,9 @@ expression matching, so typing 'rvm use 299' will match to 'rvm use ruby-1.8.7-p
 == Install via gems
 
   $ gem install rvm-completion
-  $ install-rvm-completion
   
-Then add the following line to your bash profile (~/.profile or ~/.bashrc):
-
-  complete -C $rvm_scripts_path/rvm-completion.rb -o default rvm
+Then, follow the on-screen instructions (two small steps since rubygems do not allow
+to run arbitrary code post-install)
   
 == Manual install
 
