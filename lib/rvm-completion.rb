@@ -3,6 +3,9 @@
 #
 # Bash completion for Ruby Version Manager commands, Rubies and gemsets
 #
+# See http://github.com/colszowka/rvm-completion#readme
+#
+# For manual setup:
 # Add the following line to your ~/.profile or ~/.bashrc:
 # complete -C PATH/TO/rvm_completion.rb -o default rvm
 # Don't forget to make the completion script executable with chmod +x!
@@ -11,6 +14,7 @@
 # (see http://github.com/ryanb/dotfiles/blob/master/bash/completion_scripts/project_completion)
 #
 class RVMCompletion
+  
   def initialize(comp_line)
     @comp_line = comp_line
   end
@@ -25,14 +29,14 @@ class RVMCompletion
     case shell_argument 
       when /^use|uninstall|remove/
         return [] if shell_argument(3).length > 0
-        select(rubies, shell_argument(2))
+        select(rubies, shell_argument(2), :regexp => true)
       when /^install/
         select(rvm_ruby_aliases, shell_argument(2))
       
       when /^gemset/
         case shell_argument(2)
           when /use|copy|clear|delete|export/
-            select(gemsets, shell_argument(3))
+            select(gemsets, shell_argument(3), :regexp => true)
           else
             select(gemset_commands, shell_argument(2))
         end
@@ -53,15 +57,22 @@ class RVMCompletion
   end
   
   # Matches the given (partial?) command against the given collection
-  def select(collection, command)
+  def select(collection, command, options={})
+    options = {:regexp => false}.merge(options)
+    return [] if collection.any? {|i| i.strip == command.strip}
     collection.select do |item|
-      item[0, command.length] == command or item =~ /#{command}/
+      item[0, command.length] == command or (options[:regexp] and item =~ /#{command}/)
     end.sort
+  end
+  
+  # Retrieves the current ruby binary path
+  def current_ruby_path
+    @current_ruby_path ||= `which ruby`
   end
   
   # Retrieves the current rvm ruby
   def current_ruby
-    @current_ruby ||= `which ruby`.strip.chomp.gsub(ENV['rvm_rubies_path']+'/', '').split('/').first
+    @current_ruby ||= current_ruby_path.strip.chomp.gsub(File.join(ENV['rvm_rubies_path'], '/'), '').split('/').first
   end
   
   # Retrieves all available rubies
@@ -104,6 +115,7 @@ end
 #   f.puts RVMCompletion.new(ENV["COMP_LINE"]).shell_argument(2).inspect
 #   f.puts RVMCompletion.new(ENV["COMP_LINE"]).matches.inspect
 # end
-
-puts RVMCompletion.new(ENV["COMP_LINE"]).matches
-exit 0
+unless ENV['COMP_LINE'].nil?
+  puts RVMCompletion.new(ENV["COMP_LINE"]).matches
+  exit 0
+end
