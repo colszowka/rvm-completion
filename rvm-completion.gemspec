@@ -25,12 +25,17 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "bin/install-rvm-completion",
      "lib/rvm-completion.rb",
+     "rvm-completion.gemspec",
      "test/helper.rb",
      "test/test_rvm-completion.rb"
   ]
   s.homepage = %q{http://github.com/colszowka/rvm-completion}
-  s.post_install_message = %q{To install the completion, execute 'install-rvm-completion' in your terminal now!}
+  s.post_install_message = %q{
+To install rvm completion v0.0.1, please run 'install-rvm-completion' in your terminal now!
+
+}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
