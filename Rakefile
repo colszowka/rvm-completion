@@ -5,12 +5,15 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "rvm-completion"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
-    gem.email = ""christoph"
+    gem.summary = %Q{bash completion for Ruby Version Manager}
+    gem.description = %Q{bash completion for Ruby Version Manager including installed rubies and gemsets for current ruby}
+    gem.email = "christoph at olszowka de"
     gem.homepage = "http://github.com/colszowka/rvm-completion"
-    gem.authors = [""Christoph"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
+    gem.authors = ["Christoph Olszowka"]
+    gem.bindir = 'bin'
+    gem.executables = ['install-rvm-completion']
+    gem.default_executable = 'install-rvm-completion'
+    gem.add_development_dependency "shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
