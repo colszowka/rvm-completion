@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rvm-completion}
-  s.version = "0.1.0"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Christoph Olszowka"]
@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = %q{http://github.com/colszowka/rvm-completion}
   s.post_install_message = %q{
-To install rvm completion v0.1.0, please run 'install-rvm-completion' in your terminal now!
+To install rvm completion v0.2.0, please run 'install-rvm-completion' in your terminal now!
 
 }
   s.rdoc_options = ["--charset=UTF-8"]
