@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+rvm_scripts_path = ENV['rvm_scripts_path']
+completion_source = File.expand_path(File.join(File.dirname(__FILE__), '../lib/rvm-completion.rb'))
+completion_target = File.join(rvm_scripts_path, 'rvm-completion.rb')
+
+if rvm_scripts_path.nil? or not (File.exist?(rvm_scripts_path) and File.directory?(rvm_scripts_path))
+  puts "Failed to find rvm scripts path - is rvm installed correctly?"
+  exit 1
+end
+
+if system "cp #{completion_source} #{completion_target}"
+  puts "Success! Completion script installed to #{completion_target}", ""
+  puts "Please add the following line at the end of your ~/.profile or ~/.bashrc:"
+  puts "  complete -C $rvm_scripts_path/#{File.basename(completion_target)} -o default rvm"
+else
+  puts "Failed to copy the completion script to #{rvm_scripts_path}!"
+  exit 1
+end

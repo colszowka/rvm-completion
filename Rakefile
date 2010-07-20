@@ -14,6 +14,7 @@ begin
     gem.executables = ['install-rvm-completion']
     gem.default_executable = 'install-rvm-completion'
     gem.add_development_dependency "shoulda", ">= 0"
+    gem.post_install_message = "To install the completion, execute 'install-rvm-completion' in your terminal now!"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
