@@ -6,41 +6,13 @@ require 'fileutils'
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'rvm-completion'
-
-# Define path to tmp directory
-tmp_root = File.expand_path(File.join(File.dirname(__FILE__), '../tmp'))
-
-# Set environment vars used in completion to test-specific ones
-ENV['rvm_rubies_path'] = File.join(tmp_root, 'rubies')
-ENV['rvm_gems_path'] = File.join(tmp_root, 'gems')
-ENV['rvm_gemset_separator'] = '@'
-
-# Clean up and prepare test folders
-FileUtils.rm_rf(tmp_root) if File.exist?(tmp_root)
-
-def mock_gemset(ruby_name, gemset_name=nil)
-  if gemset_name.nil?
-    FileUtils.mkdir_p(File.join(ENV['rvm_gems_path'], "#{ruby_name}"))
-  else
-    FileUtils.mkdir_p(File.join(ENV['rvm_gems_path'], "#{ruby_name}#{ENV['rvm_gemset_separator']}#{gemset_name}"))
-  end
-end
-
-FileUtils.mkdir_p(File.join(ENV['rvm_rubies_path'], 'default'))
-
-["macruby-0.6", "rbx-1.0.1-20100603", "ree-1.8.7-2010.02", "ruby-1.8.7-p174", 
-  "ruby-1.8.7-p299", "ruby-1.9.1-p378", "ruby-1.9.2-rc2"].each do |ruby_name|
-    FileUtils.mkdir_p(File.join(ENV['rvm_rubies_path'], ruby_name))
-    mock_gemset(ruby_name)
-    mock_gemset(ruby_name, 'global')
-end
-
-class RVMCompletion
-  # Required for mocking gemsets based upon selected ruby
-  attr_writer :current_ruby_path
-end
+require 'rvm_mock_environment'
 
 class Test::Unit::TestCase
+  # Fake the path to a ruby install used in rvm. This is required since
+  # normally, the completion resorts to the shell command 'which ruby' to
+  # determine this, which obviously is not reproducible in unit tests across
+  # environmente. Will create all mocked gemsets specified in options[:gemsets] array
   def self.using_ruby(ruby_name, options={})
     options = {:gemsets => []}.merge(options)
     options[:gemsets].each do |gemset|
@@ -54,6 +26,9 @@ class Test::Unit::TestCase
     end
   end
   
+  # Processes the completion for the given comp line(s) and yields the 
+  # shoulda context. If used after using_ruby will use that ruby with a mocked
+  # bin path
   def self.completion_for(*comp_lines)
     comp_lines.each do |comp_line|
       context "Completion for '#{comp_line}'" do
@@ -77,6 +52,7 @@ class Test::Unit::TestCase
     end
   end
   
+  # Asserts the completion stored in subject includes the given values (and only those)
   def self.should_include(*values)
     should "return #{values.length} completions" do
       assert_equal values.length, subject.length
@@ -89,9 +65,45 @@ class Test::Unit::TestCase
     end
   end
   
+  # Asserts that no completions are returned in subject
   def self.should_include_nothing
     should "include nothing in completion" do
       assert_equal 0, subject.length
+    end
+  end
+  
+  def self.with_rvm_scripts_path(path)
+    context "with rvm scripts path set to #{path}" do
+      setup { ENV['rvm_scripts_path'] = path }
+      yield
+    end
+  end
+  
+  def self.running_install_script
+    context "running the install script" do
+      setup do
+        @output = `#{File.join(File.dirname(__FILE__), '../bin/install-rvm-completion')}`
+      end
+      subject { @output }
+      yield
+    end
+  end
+  
+  def self.should_print(message)
+    should "print '#{message}'" do
+      assert_match(/#{message}/, subject)
+    end
+  end
+  
+  def self.should_not_have_copied_the_script
+    should "not have copied the completion script" do
+      assert !File.exist?(File.join(ENV['rvm_scripts_path'], 'rvm-completion.rb'))
+    end
+  end
+  
+  def self.should_have_copied_the_script
+    should "have copied the completion script" do
+      assert File.exist?(File.join(ENV['rvm_scripts_path'], 'rvm-completion.rb'))
     end
   end
 end
