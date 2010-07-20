@@ -4,14 +4,25 @@ Provides you with bash completion for the Ruby Version Manager by Wayne Seguin,
 including completion of installed Rubies and available gemsets for currently active
 Ruby.
 
-== Install
+The ruby and gemset name completion also accepts parts of the name via regular
+expression matching, so typing 'rvm use 299' will match to 'rvm use ruby-1.8.7-p299'
+
+== Install via gems
 
   $ gem install rvm-completion
   $ install-rvm-completion
   
 Then add the following line to your bash profile (~/.profile or ~/.bashrc):
-  complete -C $rvm_scripts_path/rvm-completion.rb -o default rvm
 
+  complete -C $rvm_scripts_path/rvm-completion.rb -o default rvm
+  
+== Manual install
+
+You can also install manually by grabbing the rvm-completion.rb file inside the lib
+directory, placing it somewhere on your local machine, making it executable with
+chmod +x and adding the following to your bash profile:
+
+  complete -C THE/PATH/TO/rvm-completion.rb -o default rvm
 
 == Note on Patches/Pull Requests
  
