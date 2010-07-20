@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rvm-completion}
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Christoph Olszowka"]
@@ -29,11 +29,13 @@ Gem::Specification.new do |s|
      "lib/rvm-completion.rb",
      "rvm-completion.gemspec",
      "test/helper.rb",
+     "test/rvm_mock_environment.rb",
+     "test/test_installer.rb",
      "test/test_rvm-completion.rb"
   ]
   s.homepage = %q{http://github.com/colszowka/rvm-completion}
   s.post_install_message = %q{
-To install rvm completion v0.2.0, please run 'install-rvm-completion' in your terminal now!
+To install rvm completion v0.2.1, please run 'install-rvm-completion' in your terminal now!
 
 }
   s.rdoc_options = ["--charset=UTF-8"]
@@ -42,6 +44,8 @@ To install rvm completion v0.2.0, please run 'install-rvm-completion' in your te
   s.summary = %q{bash completion for Ruby Version Manager}
   s.test_files = [
     "test/helper.rb",
+     "test/rvm_mock_environment.rb",
+     "test/test_installer.rb",
      "test/test_rvm-completion.rb"
   ]
 
