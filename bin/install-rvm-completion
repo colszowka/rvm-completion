@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-rvm_scripts_path = ENV['rvm_scripts_path']
+rvm_scripts_path = ENV['rvm_scripts_path'] || "#{ENV['rvm_path']}/scripts"
 
 if rvm_scripts_path.nil? or not (File.exist?(rvm_scripts_path) and File.directory?(rvm_scripts_path))
   puts "Failed to find rvm scripts path - is rvm installed correctly?"

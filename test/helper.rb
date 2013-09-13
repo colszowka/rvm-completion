@@ -78,10 +78,19 @@ class Test::Unit::TestCase
       yield
     end
   end
-  
-  def self.running_install_script
+
+  def self.with_rvm_path(path)
+    context "with rvm path set to #{path}" do
+      setup { ENV['rvm_path'] = path }
+      yield
+    end
+  end
+
+  def self.running_install_script(scripts_dir)
     context "running the install script" do
       setup do
+        install_script = File.join(scripts_dir, 'rvm-completion.rb')
+        File.delete install_script if File.exists? install_script
         @output = `#{File.join(File.dirname(__FILE__), '../bin/install-rvm-completion')}`
       end
       subject { @output }
@@ -95,15 +104,15 @@ class Test::Unit::TestCase
     end
   end
   
-  def self.should_not_have_copied_the_script
+  def self.should_not_have_copied_the_script(scripts_dir)
     should "not have copied the completion script" do
-      assert !File.exist?(File.join(ENV['rvm_scripts_path'], 'rvm-completion.rb'))
+      assert !File.exist?(File.join(scripts_dir, 'rvm-completion.rb'))
     end
   end
   
-  def self.should_have_copied_the_script
+  def self.should_have_copied_the_script(scripts_dir)
     should "have copied the completion script" do
-      assert File.exist?(File.join(ENV['rvm_scripts_path'], 'rvm-completion.rb'))
+      assert File.exist?(File.join(scripts_dir, 'rvm-completion.rb'))
     end
   end
 end
