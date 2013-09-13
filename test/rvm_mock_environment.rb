@@ -19,6 +19,7 @@ def mock_gemset(ruby_name, gemset_name=nil)
   end
 end
 
+FileUtils.mkdir_p(File.join(tmp_root, 'scripts'))
 FileUtils.mkdir_p(File.join(ENV['rvm_rubies_path'], 'default'))
 
 ["macruby-0.6", "rbx-1.0.1-20100603", "ree-1.8.7-2010.02", "ruby-1.8.7-p174", 
